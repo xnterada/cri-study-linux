@@ -31,10 +31,13 @@ useradd -m $USERNAME -s /bin/bash
 cd /home/$USERNAME
 mkdir .ssh
 chmod 700 .ssh
+chown $USERNAME:$USERNAME .ssh
 
 ssh-keygen -t rsa -b 2048 -f .ssh/id_rsa -N "" -C "$USERNAME"
 cat .ssh/id_rsa.pub >> .ssh/authorized_keys && rm .ssh/id_rsa.pub
 chmod 600 .ssh/authorized_keys
+chown $USERNAME:$USERNAME .ssh/authorized_keys
 
 mv .ssh/id_rsa ".ssh/$USERNAME.pem"
 aws s3 cp ".ssh/$USERNAME.pem" s3://cri-study-linux-bucket/key/
+rm  ".ssh/$USERNAME.pem"
